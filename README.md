@@ -37,3 +37,46 @@ The FastAPI server provides the following API routes:
 - `POST /tasks`: Adds a task to the task list. The request body should contain the task details.
 
 - `GET /tasks`: Retrieves the task list.
+
+## Node.js Express Server
+
+This repository now includes a simple Node.js Express server under the `node-server` directory that implements the same `/tasks` routes (in-memory store).
+
+1. Install dependencies
+
+```bash
+cd node-server
+npm install
+```
+
+2. Run the Node.js server
+
+The Express server listens on port `3000` by default. Start it in the foreground with:
+
+```bash
+npm run start:express
+```
+
+Or run it in the background and capture logs:
+
+```bash
+nohup npm run start:express > node-server.log 2>&1 &
+```
+
+3. Test the endpoints
+
+- GET /tasks (should return an array):
+
+```bash
+curl http://localhost:3000/tasks
+```
+
+- POST /tasks (add a task):
+
+```bash
+curl -X POST http://localhost:3000/tasks \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Buy milk"}'
+```
+
+The POST returns the created task JSON, and subsequent GET /tasks will include the new task. Note: tasks are stored in memory and will be lost when the server restarts.
