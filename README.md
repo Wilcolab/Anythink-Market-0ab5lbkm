@@ -72,6 +72,56 @@ To run the FastAPI server using Docker, follow these steps:
 
   This Node.js server is a migration of the Python FastAPI `/tasks` routes. It provides the same API surface (`GET /tasks` and `POST /tasks`) and stores tasks in memory.
 
+  # Anythink-Market
+
+  This repository contains two implementations of a simple tasks API (two endpoints: `GET /tasks` and `POST /tasks`):
+
+  - A Python FastAPI implementation (in `python-server`).
+  - A migrated Node.js Express implementation (in `node-server`). The Node server is a migration of the Python FastAPI `/tasks` routes.
+
+  Both implementations use an in-memory task list for demo purposes.
+
+  ---
+
+  ## Python (FastAPI) server
+
+  Location: `python-server`
+
+  Quick start (using Docker Compose):
+
+  ```bash
+  docker compose up
+  ```
+
+  This will build and run the Python FastAPI service. By default the FastAPI server in this project runs on port `8000` (see `python-server` code / Dockerfile).
+
+  API routes (FastAPI):
+
+  - `POST /tasks` — add a task. Request body should be JSON with at least a `title` field.
+  - `GET /tasks` — return a JSON array of tasks.
+
+  Example curl commands (Python server):
+
+  ```bash
+  # GET all tasks (FastAPI)
+  curl http://localhost:8000/tasks
+
+  # POST a task (FastAPI)
+  curl -X POST http://localhost:8000/tasks \
+    -H 'Content-Type: application/json' \
+    -d '{"title":"Buy milk"}'
+  ```
+
+  Note: refer to `python-server/src/main.py` for implementation details.
+
+  ---
+
+  ## Node.js (Express) server — migrated from Python
+
+  Location: `node-server`
+
+  This Node.js server is a migration of the Python FastAPI `/tasks` routes. It provides the same API surface (`GET /tasks` and `POST /tasks`) and stores tasks in memory.
+
   1) Install dependencies
 
   ```bash
