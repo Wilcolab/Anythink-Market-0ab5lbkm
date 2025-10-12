@@ -22,61 +22,102 @@ To run the FastAPI server using Docker, follow these steps:
 
 - Build and start the Docker containers by running the following command:
 
-  ```shell
+  # Anythink-Market
+
+  This repository contains two implementations of a simple tasks API (two endpoints: `GET /tasks` and `POST /tasks`):
+
+  - A Python FastAPI implementation (in `python-server`).
+  - A migrated Node.js Express implementation (in `node-server`). The Node server is a migration of the Python FastAPI `/tasks` routes.
+
+  Both implementations use an in-memory task list for demo purposes.
+
+  ---
+
+  ## Python (FastAPI) server
+
+  Location: `python-server`
+
+  Quick start (using Docker Compose):
+
+  ```bash
   docker compose up
   ```
 
-  This command will build the Docker image for the FastAPI server and start the containers defined in the `docker-compose.yml` file.
+  This will build and run the Python FastAPI service. By default the FastAPI server in this project runs on port `8000` (see `python-server` code / Dockerfile).
 
-- The FastAPI server should now be running. You can access at port `8000`.
+  API routes (FastAPI):
 
-## API Routes
+  - `POST /tasks` — add a task. Request body should be JSON with at least a `title` field.
+  - `GET /tasks` — return a JSON array of tasks.
 
-The FastAPI server provides the following API routes:
+  Example curl commands (Python server):
 
-- `POST /tasks`: Adds a task to the task list. The request body should contain the task details.
+  ```bash
+  # GET all tasks (FastAPI)
+  curl http://localhost:8000/tasks
 
-- `GET /tasks`: Retrieves the task list.
+  # POST a task (FastAPI)
+  curl -X POST http://localhost:8000/tasks \
+    -H 'Content-Type: application/json' \
+    -d '{"title":"Buy milk"}'
+  ```
 
-## Node.js Express Server
+  Note: refer to `python-server/src/main.py` for implementation details.
 
-This repository now includes a simple Node.js Express server under the `node-server` directory that implements the same `/tasks` routes (in-memory store).
+  ---
 
-1. Install dependencies
+  ## Node.js (Express) server — migrated from Python
 
-```bash
-cd node-server
-npm install
-```
+  Location: `node-server`
 
-2. Run the Node.js server
+  This Node.js server is a migration of the Python FastAPI `/tasks` routes. It provides the same API surface (`GET /tasks` and `POST /tasks`) and stores tasks in memory.
 
-The Express server listens on port `3000` by default. Start it in the foreground with:
+  1) Install dependencies
 
-```bash
-npm run start:express
-```
+  ```bash
+  cd node-server
+  npm install
+  ```
 
-Or run it in the background and capture logs:
+  2) Run the server
 
-```bash
-nohup npm run start:express > node-server.log 2>&1 &
-```
+  The Express server listens on port `3000` by default. Start it in the foreground with:
 
-3. Test the endpoints
+  ```bash
+  npm run start:express
+  ```
 
-- GET /tasks (should return an array):
+  Or run it in the background and capture logs:
 
-```bash
-curl http://localhost:3000/tasks
-```
+  ```bash
+  nohup npm run start:express > node-server/node-server.log 2>&1 &
+  ```
 
-- POST /tasks (add a task):
+  3) API routes (Node/Express)
 
-```bash
-curl -X POST http://localhost:3000/tasks \
-  -H 'Content-Type: application/json' \
-  -d '{"title":"Buy milk"}'
-```
+  - `POST /tasks` — add a task. Request body: JSON with `title` (string) and optional `completed` (boolean).
+  - `GET /tasks` — return a JSON array of tasks.
 
-The POST returns the created task JSON, and subsequent GET /tasks will include the new task. Note: tasks are stored in memory and will be lost when the server restarts.
+  Example curl commands (Node server):
+
+  ```bash
+  # GET all tasks (Node)
+  curl http://localhost:3000/tasks
+
+  # POST a task (Node)
+  curl -X POST http://localhost:3000/tasks \
+    -H 'Content-Type: application/json' \
+    -d '{"title":"Buy milk"}'
+  ```
+
+  Notes
+  - The Node.js server was migrated from the Python FastAPI implementation so the API endpoints match.
+  - Both servers store tasks in memory — data is lost on restart. If you want persistence, I can add file-based storage or a small database (SQLite).
+
+  ---
+
+  If you'd like, I can:
+
+  - Commit `node-server` files into this branch and update the PR.
+  - Add additional endpoints (PUT/PATCH/DELETE) to manage tasks.
+  - Add tests or CI configuration to satisfy required status checks on the PR.
