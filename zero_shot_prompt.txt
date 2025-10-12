@@ -1,0 +1,35 @@
+/**
+ * Convert a string to snake_case.
+ *
+ * Handles:
+ * - spaces, punctuation and symbols -> underscores
+ * - camelCase and PascalCase -> inserts underscores before capitals
+ * - collapses multiple underscores and trims leading/trailing underscores
+ * - preserves letters and digits (Unicode-aware)
+ *
+ * Examples:
+ *   toSnakeCase("HelloWorld")        // "hello_world"
+ *   toSnakeCase("fooBarBaz")         // "foo_bar_baz"
+ *   toSnakeCase("some text HERE!")   // "some_text_here"
+ *   toSnakeCase("kebab-case_test")   // "kebab_case_test"
+ *
+ * @param {any} input
+ * @returns {string}
+ */
+function toSnakeCase(input) {
+    if (input == null) return '';
+    let s = String(input);
+
+    // Insert underscore between a lowercase/number and an uppercase letter (camelCase -> snake_case)
+    s = s.replace(/([\p{Ll}\p{N}])(\p{Lu})/gu, '$1_$2');
+
+    // Replace any sequence of non-letter/digit characters with an underscore
+    s = s.replace(/[^\p{L}\p{N}]+/gu, '_');
+
+    // Collapse multiple underscores and trim leading/trailing underscores
+    s = s.replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+
+    return s.toLowerCase();
+}
+
+module.exports = toSnakeCase;
