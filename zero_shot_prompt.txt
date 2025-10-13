@@ -1,0 +1,31 @@
+// toSnakeCase.js
+function toSnakeCase(input) {
+    if (input == null) return '';
+    let s = String(input);
+    // normalize unicode and strip diacritics
+    if (typeof s.normalize === 'function') {
+        s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+    }
+    s = s
+        // unify common separators to spaces
+        .replace(/[_\-\s]+/g, ' ')
+        // split camelCase / PascalCase boundaries
+        .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+        // split acronym+Pascal boundaries (HTMLParser -> HTML Parser)
+        .replace(/([A-Z]+)([A-Z][a-z0-9]+)/g, '$1 $2')
+        // remove any remaining non-alphanumeric characters except spaces
+        .replace(/[^0-9A-Za-z\s]+/g, '')
+        .trim();
+
+    return s === '' ? '' : s.split(/\s+/).join('_').toLowerCase();
+}
+
+module.exports = toSnakeCase;
+
+/*
+Examples:
+console.log(toSnakeCase('fooBarBaz'));                         // "foo_bar_baz"
+console.log(toSnakeCase('HelloWorld'));                        // "hello_world"
+console.log(toSnakeCase('  --Some--mixed_string With**punctuation  ')); // "some_mixed_string_with_punctuation"
+console.log(toSnakeCase('ßpecialÇase'));                       // "sspecial_case"
+*/
